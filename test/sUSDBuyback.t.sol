@@ -28,6 +28,7 @@ contract CounterTest is Test {
         buyback.exchange(100e18);
         assertEq(IERC20(sUSD).balanceOf(redeemer), 0);
         assertEq(IERC20(USDC).balanceOf(address(buyback)), 0);
+        assertEq(IERC20(USDC).balanceOf(redeemer), 100e6);
         assertEq(IERC20(sUSD).balanceOf(feeAddress), before + 100e18);
     }
 
