@@ -25,7 +25,7 @@ contract CounterTest is Test {
         vm.startPrank(redeemer);
         uint256 before = IERC20(sUSD).balanceOf(feeAddress);
         IERC20(sUSD).approve(address(buyback), 100e18);
-        buyback.exchange(100e18);
+        buyback.exchange(100e6);
         assertEq(IERC20(sUSD).balanceOf(redeemer), 0);
         assertEq(IERC20(USDC).balanceOf(address(buyback)), 0);
         assertEq(IERC20(USDC).balanceOf(redeemer), 100e6);
@@ -61,7 +61,7 @@ contract CounterTest is Test {
         deal(USDC, address(buyback), 100e6);
         vm.startPrank(redeemer);
         vm.expectRevert();
-        buyback.exchange(100e18);
+        buyback.exchange(100e6);
     }
 
     function test_notEnoughsUSDBalance() public {
@@ -70,7 +70,7 @@ contract CounterTest is Test {
         vm.startPrank(redeemer);
         IERC20(sUSD).approve(address(buyback), 100e18);
         vm.expectRevert();
-        buyback.exchange(100e18);
+        buyback.exchange(100e6);
     }
 
     function test_notEnoughUSDC() public {
@@ -79,15 +79,6 @@ contract CounterTest is Test {
         vm.startPrank(redeemer);
         IERC20(sUSD).approve(address(buyback), 100e18);
         vm.expectRevert();
-        buyback.exchange(100e18);
-    }
-
-    function test_dust() public {
-        deal(sUSDTokenState, redeemer, 100e18 + 1);
-        deal(USDC, address(buyback), 100e6);
-        vm.startPrank(redeemer);
-        IERC20(sUSD).approve(address(buyback), 100e18);
-        vm.expectRevert();
-        buyback.exchange(100e18 + 1);
+        buyback.exchange(100e6);
     }
 }

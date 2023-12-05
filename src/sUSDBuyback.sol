@@ -20,15 +20,14 @@ contract sUSDBuyback is Ownable {
         _initializeOwner(msg.sender);
     }
 
-    function exchange(uint256 _sUSDAmountIn) external {
-        require(_sUSDAmountIn % UNIT_DIFFERENCE == 0, "dust");
+    function exchange(uint256 _USDCAmountOut) external {
+        uint256 _sUSDAmountIn = _USDCAmountOut * UNIT_DIFFERENCE;
         require(sUSD.allowance(msg.sender, address(this)) >= _sUSDAmountIn, "not approved");
         require(sUSD.balanceOf(msg.sender) >= _sUSDAmountIn, "not enough sUSD");
-        uint256 USDCAmountOut = _sUSDAmountIn / UNIT_DIFFERENCE;
-        require(USDC.balanceOf(address(this)) >= USDCAmountOut, "not enough USDC");
+        require(USDC.balanceOf(address(this)) >= _USDCAmountOut, "not enough USDC");
         sUSD.transferFrom(msg.sender, FEE_ADDRESS, _sUSDAmountIn);
-        USDC.transfer(msg.sender, USDCAmountOut);
-        emit Buyback(_sUSDAmountIn, USDCAmountOut);
+        USDC.transfer(msg.sender, _USDCAmountOut);
+        emit Buyback(_sUSDAmountIn, _USDCAmountOut);
     }
 
     function recoverERC20(address _token) external onlyOwner {
