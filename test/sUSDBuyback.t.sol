@@ -47,6 +47,7 @@ contract CounterTest is Test {
         deal(sUSDTokenState, address(buyback), 1e18);
         buyback.recoverERC20(sUSD);
         assertEq(IERC20(sUSD).balanceOf(address(buyback)), 0);
+        assertEq(IERC20(sUSD).balanceOf(buyback.owner()), 1e18);
     }
 
     function test_notOwnerRug() public {

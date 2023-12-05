@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {Ownable} from "solady/auth/Ownable.sol";
 import {IERC20Metadata as ERC20} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import {SafeTransferLib} from "solady/utils/SafeTransferLib.sol";
 
 contract sUSDBuyback is Ownable {
     ERC20 public immutable sUSD;
@@ -20,6 +21,9 @@ contract sUSDBuyback is Ownable {
         _initializeOwner(msg.sender);
     }
 
+    /// @notice Exchange sUSD into USDC function
+    /// @dev Using USDC amount, there will be no dust as USDC decimals (6) is scales into sUSD amount (18)
+    /// @param _USDCAmountOut Amount of USDC to received
     function exchange(uint256 _USDCAmountOut) external {
         uint256 _sUSDAmountIn = _USDCAmountOut * UNIT_DIFFERENCE;
         require(sUSD.allowance(msg.sender, address(this)) >= _sUSDAmountIn, "not approved");
@@ -30,9 +34,11 @@ contract sUSDBuyback is Ownable {
         emit Buyback(_sUSDAmountIn, _USDCAmountOut);
     }
 
+    /// @notice Explain to an end user what this does
+    /// @dev Explain to a developer any extra details
+    /// @param _token a valid ERC-20 token address
     function recoverERC20(address _token) external onlyOwner {
         require(_token != address(USDC), "not usdc");
-        ERC20 token = ERC20(_token);
-        token.transfer(owner(), token.balanceOf(address(this)));
+        SafeTransferLib.safeTransferAll(_token, owner());
     }
 }
