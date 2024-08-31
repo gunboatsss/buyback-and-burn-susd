@@ -6,19 +6,15 @@ import {IERC20Metadata as ERC20} from "@openzeppelin/contracts/interfaces/IERC20
 import {SafeTransferLib} from "solady/utils/SafeTransferLib.sol";
 
 contract sUSDBuyback is Ownable {
-    ERC20 public immutable sUSD;
-    ERC20 public immutable USDC;
+    ERC20 public immutable sUSD = ERC20(0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9);
+    ERC20 public immutable USDC = ERC20(0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85);
     address public constant FEE_ADDRESS = 0xfeEFEEfeefEeFeefEEFEEfEeFeefEEFeeFEEFEeF;
     uint256 private constant UNIT_DIFFERENCE = 1e12; // 1e18/1e6 from USDC
 
     event Buyback(uint256 _sUSDAmount, uint256 _USDCAmount);
 
-    constructor(address _sUSD, address _USDC) {
-        sUSD = ERC20(_sUSD);
-        USDC = ERC20(_USDC);
-        require(sUSD.decimals() == 18, "invalid decimals");
-        require(USDC.decimals() == 6, "invalid decimals");
-        _initializeOwner(msg.sender);
+    constructor(address _owner) {
+        _initializeOwner(_owner);
     }
 
     /// @notice Exchange sUSD into USDC function
