@@ -20,11 +20,12 @@ contract sUSDBuybackTest is Test {
     address USDC = 0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85;
     TokenState sUSDTokenState = TokenState(0x92bAc115d89cA17fd02Ed9357CEcA32842ACB4c2);
     address feeAddress = 0xfeEFEEfeefEeFeefEEFEEfEeFeefEEFeeFEEFEeF;
+    address owner = address(uint160(uint256(keccak256("owner"))));
     address redeemer = address(69);
 
     function setUp() public {
         vm.createSelectFork(OP_MAINNET_RPC);
-        buyback = new sUSDBuyback(msg.sender);
+        buyback = new sUSDBuyback(owner);
     }
 
     function mintsUSD(address who, uint256 amount) internal {
@@ -54,6 +55,7 @@ contract sUSDBuybackTest is Test {
 
     function test_rugOtherToken() public {
         mintsUSD(address(buyback), 1e18);
+        vm.prank(owner);
         buyback.recoverERC20(sUSD);
         assertEq(IERC20(sUSD).balanceOf(address(buyback)), 0);
         assertEq(IERC20(sUSD).balanceOf(buyback.owner()), 1e18);

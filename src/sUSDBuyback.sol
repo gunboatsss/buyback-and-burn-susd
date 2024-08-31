@@ -22,7 +22,6 @@ contract sUSDBuyback is Ownable {
     /// @param _USDCAmountOut Amount of USDC to received
     function exchange(uint256 _USDCAmountOut) external {
         uint256 _sUSDAmountIn = _USDCAmountOut * UNIT_DIFFERENCE;
-        require(sUSD.allowance(msg.sender, address(this)) >= _sUSDAmountIn, "not approved");
         require(sUSD.balanceOf(msg.sender) >= _sUSDAmountIn, "not enough sUSD");
         require(USDC.balanceOf(address(this)) >= _USDCAmountOut, "not enough USDC");
         sUSD.transferFrom(msg.sender, FEE_ADDRESS, _sUSDAmountIn);
