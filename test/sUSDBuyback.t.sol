@@ -6,9 +6,9 @@ import {sUSDBuyback} from "../src/sUSDBuyback.sol";
 import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
 
 interface TokenState {
-    function associatedContract() view external returns (address);
+    function associatedContract() external view returns (address);
 
-    function balanceOf(address) view external returns (uint256);
+    function balanceOf(address) external view returns (uint256);
 
     function setBalanceOf(address, uint256) external;
 }

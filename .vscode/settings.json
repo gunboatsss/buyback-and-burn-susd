@@ -1,6 +1,6 @@
 {
   "solidity.packageDefaultDependenciesContractsDirectory": "src",
-  "solidity.packageDefaultDependenciesDirectory": "lib",
+  "solidity.packageDefaultDependenciesDirectory": "",
   "solidity.defaultCompiler": "remote",
   "solidity.compileUsingRemoteVersion": "0.8.23"
 }
